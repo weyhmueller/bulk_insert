@@ -75,6 +75,7 @@ module BulkInsert
         end
 
         sql << rows.join(",")
+        sql << ";"
         @connection.execute(sql)
 
         @set.clear
