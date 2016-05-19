@@ -55,7 +55,7 @@ module BulkInsert
 
     def save!
       if pending?
-        sql = "INSERT INTO #{@table_name} (#{@column_names}) VALUES "
+        sql = "INSERT ALL \n"
         @now = Time.now
 
         rows = []
@@ -71,11 +71,11 @@ module BulkInsert
               values << @connection.quote(value, column)
             end
           end
-          rows << "(#{values.join(',')})"
+          rows << "INTO #{@table_name} (#{@column_names}) VALUES (#{values.join(',')})"
         end
 
-        sql << rows.join(",")
-        sql << ";"
+        sql << rows.join("\n")
+        sql << " SELECT 1 FROM DUAL"
         @connection.execute(sql)
 
         @set.clear
